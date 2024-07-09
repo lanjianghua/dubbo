@@ -250,6 +250,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
                 }
             }
         }
+
         if (consumer != null) {
             if (application == null) {
                 application = consumer.getApplication();
