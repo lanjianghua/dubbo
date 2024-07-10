@@ -260,6 +260,7 @@ public class DubboProtocol extends AbstractProtocol {
         boolean isServer = url.getParameter(Constants.IS_SERVER_KEY, true);
         if (isServer) {
             ExchangeServer server = serverMap.get(key);
+            // 如果对应server还未缓存，则进行创建
             if (server == null) {
                 serverMap.put(key, createServer(url));
             } else {

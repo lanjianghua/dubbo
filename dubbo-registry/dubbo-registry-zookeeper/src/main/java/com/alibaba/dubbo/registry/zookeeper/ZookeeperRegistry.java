@@ -171,6 +171,8 @@ public class ZookeeperRegistry extends FailbackRegistry {
                         zkListeners.putIfAbsent(url, new ConcurrentHashMap<NotifyListener, ChildListener>());
                         listeners = zkListeners.get(url);
                     }
+                    // 这里的listener即为RegistryDirectory
+                    // ChildListener：是用于监听zk节点的子节点变化的接口，主要处理zk上的具体事件
                     ChildListener zkListener = listeners.get(listener);
                     if (zkListener == null) {
                         listeners.putIfAbsent(listener, new ChildListener() {
@@ -182,11 +184,16 @@ public class ZookeeperRegistry extends FailbackRegistry {
                         zkListener = listeners.get(listener);
                     }
                     zkClient.create(path, false);
+                    // 监听路劲的子节点变化
+                    // 此处是获取provider的url
+                    // 当首次调用 zkClient.addChildListener 方法时，Zookeeper 客户端会在指定路径上注册一个子节点监听器，并立即返回当前路径下的所有子节点列表。这些子节点列表通常包含当前可用的服务提供者 URLs。
+                    // 一旦注册了 ChildListener，如果 Zookeeper 路径下的子节点发生增减变化，Zookeeper 客户端会触发已注册的 ChildListener。在 ChildListener 的 childChanged 方法中，可以处理这些变化，并通知相应的业务逻辑。
                     List<String> children = zkClient.addChildListener(path, zkListener);
                     if (children != null) {
                         urls.addAll(toUrlsWithEmpty(url, path, children));
                     }
                 }
+                // url获取完成后，主动调用一次nodify。如果provider节点变化，则是被动回调nodify方法，如181行
                 notify(url, listener, urls);
             }
         } catch (Throwable e) {

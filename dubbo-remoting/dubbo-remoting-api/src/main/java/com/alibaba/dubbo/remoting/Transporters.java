@@ -47,6 +47,7 @@ public class Transporters {
         if (handlers == null || handlers.length == 0) {
             throw new IllegalArgumentException("handlers == null");
         }
+        // 设置Netty的ChannelHandler
         ChannelHandler handler;
         if (handlers.length == 1) {
             handler = handlers[0];
@@ -64,6 +65,7 @@ public class Transporters {
         if (url == null) {
             throw new IllegalArgumentException("url == null");
         }
+        // 设置Netty的ChannelHandler
         ChannelHandler handler;
         if (handlers == null || handlers.length == 0) {
             handler = new ChannelHandlerAdapter();
